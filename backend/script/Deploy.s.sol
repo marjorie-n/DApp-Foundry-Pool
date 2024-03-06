@@ -11,8 +11,11 @@ contract MyScript is Script {
         vm.startBroadcast(deployerPrivateKey); // Commence à diffuser les transactions avec une clé privée.
         uint256 end = 4 weeks;
         uint256 goal = 10 ether;
-        Pool pool = new Pool (end, goal);
-        vm.stopBroadcast(); // Arrête la diffusion.
 
+        // Deployer la pool.
+        Pool pool = new Pool(end, goal);
+
+        // Arreter la diffusion.
+        vm.stopBroadcast();
     }
 }
