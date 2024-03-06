@@ -1,7 +1,9 @@
+import { Layout } from "@/components/Layout";
+import Pool from "@/components/Pool";
 export default function Home() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </div>
+    <Layout>
+      <Pool />
+    </Layout>
   );
 }
