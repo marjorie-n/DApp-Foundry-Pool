@@ -6,14 +6,14 @@ import { Flex, Text } from "@chakra-ui/react";
 const Header = () => {
   return (
     <Flex
-        justifyContent="space-between"
-        alignItems="center"
-        p="2rem"
+      p="2rem"
+      justifyContent="space-between"
+      alignItems="center"
+      width="100vh"
     >
-        <Text fontWeight="bold" fontSize="2xl">Logo</Text>
-        <ConnectButton />
+      <Text as="b">Logo</Text>
+      <ConnectButton />
     </Flex>
-    
   );
 };
 
