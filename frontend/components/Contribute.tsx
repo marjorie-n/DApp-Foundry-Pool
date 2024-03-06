@@ -1,48 +1,75 @@
 "use client";
-// ChakraUi
-import { Flex, Text, Input, Button, Heading, useToast } from "@chakra-ui/react";
+
+// ChakraUI
+import { Flex, Input, Button, Heading, useToast } from "@chakra-ui/react";
+
 // React
 import { useState } from "react";
 
-//Constants & Types
-import { contracAdress, abi } from "../constants";
+// Constants and Types
+import { contractAdress, abi } from "../constants/index";
+import { LayoutProps } from "../types/index";
 
 // Viem
 import { parseEther } from "viem";
 
 // Wagmi
 import {
+  prepareWriteContract,
   writeContract,
-  prepareTransactionRequest,
-  waitForTransactionReceipt,
+  waitForTransaction,
 } from "@wagmi/core";
 
 const Contribute = () => {
+  const toast = useToast();
   const [amount, setAmount] = useState<string>("");
+
   const contribute = async () => {
-    
-  }
+    // Prepare la transaction 
+    try {
+      let money = parseEther(amount);
+      const { request } = await prepareWriteContract({
+        address: contractAdress,
+        abi: abi,
+        functionName: "contribute",
+        value: money,
+      });
+
+      // Execute la transaction
+      const { hash } = await writeContract(request);
+      const data = await waitForTransaction({
+        hash: hash,
+      });
+      console.log(data);
+      toast({
+        title: "Congratulations",
+        description: "Your contribution has been added.",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "An error occured",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <>
-      <Heading size="lg" mt="2rem">
-        Contribute
-      </Heading>
-      <Flex mt={"1rem"}>
+      <Heading mt="2rem">Contribute</Heading>
+      <Flex mt="1rem">
         <Input
+          placeholder="Your amount in ETH"
           size="lg"
-          type="number"
-          placeholder="Amount in ETH"
           value={amount}
-          onChange={(e) => {
-            console.log(e.target.value);
-          }}
-        ></Input>
-        <Button
-          colorScheme="purple"
-          size="lg"
-          ml="1rem"
-          onClick={() => contribute()}
-        >
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <Button colorScheme="purple" size="lg" onClick={() => contribute()}>
           Contribute
         </Button>
       </Flex>
