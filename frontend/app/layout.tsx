@@ -1,39 +1,41 @@
 "use client";
-
-import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
-import { hardhat, sepolia } from "wagmi/chains";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-
 import { ChakraProvider } from "@chakra-ui/react";
 
+import "@rainbow-me/rainbowkit/styles.css";
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { hardhat } from "wagmi/chains";
+// import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from "wagmi/providers/public";
+
+const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
 const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLETCONNECT || "";
 
-const config = getDefaultConfig({
+const { connectors } = getDefaultWallets({
   appName: "My RainbowKit App",
   projectId: WALLET_CONNECT,
-  chains: [hardhat, sepolia],
-  ssr: true,
+  chains,
 });
 
-const queryClient = new QueryClient();
+const wagmiConfig = createConfig({
+  autoConnect: false,
+  connectors,
+  publicClient,
+});
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body>
-        <WagmiProvider config={config}>
-          <QueryClientProvider client={queryClient}>
-            <RainbowKitProvider>
-              <ChakraProvider>{children}</ChakraProvider>
-            </RainbowKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
+        <WagmiConfig config={wagmiConfig}>
+          <RainbowKitProvider chains={chains}>
+            <ChakraProvider>{children}</ChakraProvider>
+          </RainbowKitProvider>
+        </WagmiConfig>
       </body>
     </html>
   );
