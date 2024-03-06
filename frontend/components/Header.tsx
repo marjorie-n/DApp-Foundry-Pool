@@ -13,6 +13,7 @@ const Header = () => {
         <Text fontWeight="bold" fontSize="2xl">Logo</Text>
         <ConnectButton />
     </Flex>
+    
   );
 };
 
