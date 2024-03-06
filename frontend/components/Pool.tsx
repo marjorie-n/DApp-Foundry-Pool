@@ -1,4 +1,6 @@
 "use client";
+// frontend/components/Pool.tsx
+import Contribute  from "./Contribute";
 import { useState, useEffect } from "react";
 // Wagmi
 import { useAccount } from "wagmi";
@@ -10,14 +12,14 @@ const Pool = () => {
   const { address, isConnected } = useAccount();
   return (
     <>
-      {isConnected
-        ? `Connected: ${address}`
-        : (
-          <Alert status="warning">
-            <AlertIcon />
-            Please connect your wallet
-          </Alert>
-        )}
+      {isConnected ? (
+        <Contribute />
+      ) : (
+        <Alert status="warning">
+          <AlertIcon />
+          Please connect your wallet
+        </Alert>
+      )}
     </>
   );
 };
